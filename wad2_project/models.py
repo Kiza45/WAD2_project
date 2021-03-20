@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    
     picture = models.ImageField(upload_to='profile_images', blank=True)
     follows = models.ManyToManyField('self', related_name='follower', symmetrical=False)
     video = models.FileField(upload_to='videos/')
