@@ -1,0 +1,13 @@
+*{
+	padding: 0px;
+	margin: 0px;
+}
+
+body{
+	background: #9d9b96;
+}
+header{
+	background: #15dae0;
+	height: 85px;
+	border: 1px solid ;
+}
