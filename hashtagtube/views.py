@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from hashtagtube.models import Category
 from hashtagtube.models import Page
+from hashtagtube.forms import CategoryForm, PageForm
 from hashtagtube.forms import UserForm, UserProfileForm
 
 def index(request):
@@ -23,6 +24,69 @@ def index(request):
     response = render(request, 'hashtagtube/index.html', context=context_dict)
 
     return response
+
+def show_category(request, category_name_slug):
+	context_dict = {}
+
+	try:
+		category = Category.objects.get(slug=category_name_slug)
+		pages = Page.objects.filter(category=category)
+		context_dict['pages'] = pages
+		context_dict['category'] = category
+	except Category.DoesNotExist:
+		context_dict['category'] = None
+		context_dict['pages'] = None
+	return render(request, 'hashtagtube/category.html', context=context_dict)
+
+@login_required
+def add_category(request):
+
+	if request.method == 'POST':
+		form = CategoryForm(request.POST)
+
+		if form.is_valid():
+			form.save(commit=True)
+			return redirect('/hashtagtube/')
+		else:
+			print(form.errors)
+
+@login_required
+def add_video(request, category_name_slug):
+	try:
+		category = Category.objects.get(slug=category_name_slug)
+	except Category.DoesNotExist:
+		category = None
+
+	if category is None:
+		return redirect('/hashtagtube/')
+
+	form = PageForm()
+
+	if request.method == 'POST':
+		form = PageForm(request.POST, request.FILES)
+
+		if form.is_valid():
+			if category:
+				page = form.save(commit=False)
+				page.category = category
+				page.author = author
+				page.views = 0
+				page.save()
+
+				return redirect(reverse('hashtagtube:show_category',
+					                    kwargs={'category_name_slug':
+					                            category_name_slug}))
+		else:
+			print(form.errors)
+	
+	context_dict = {'form': form, 'category': category}
+	return render(request, 'hashtagtube/add_video.html', context=context_dict)
+
+@login_required
+def restricted(request):
+	context_dict={'boldmessage':"Since you're logged in, you can see this text!"}
+	return render(request, 'hashtagtube/restricted.html', context=context_dict)
+
 
 def user_login(request):
     #If the request is a HTTP POST, try to pull out the relevant information.
@@ -52,6 +116,12 @@ def user_login(request):
     # The request is not a HTTP POST, so display the login form
     else:
         return render(request, 'hashtagtube/login.html')
+
+@login_required
+def user_logout(request):
+	logout(request)
+
+	return redirect(reverse('hashtagtube:index'))
 
 def register(request):
 	# A boolean value for telling the template 

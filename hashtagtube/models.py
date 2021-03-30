@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.template.defaultfilters import slugify
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -18,7 +19,14 @@ class Category(models.Model):
     #of integrity error when user delets account
     creator = models.ForeignKey(UserProfile, on_delete=models.DO_NOTHING)
     #video = models.FileField(upload_to='videos/')
+    
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Category, self).save(*args, **kwargs)
 
+    class Meta:
+        verbose_name_plural = "Categories"
+        
     def __str__(self):
         return self.title
 
