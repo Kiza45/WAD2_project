@@ -9,7 +9,7 @@
 <h1>Register here</h1>
 {% if registered %}
 <strong>You are now registered</strong>
-<a href="{% url 'rango:index' %}">Return to the homepage.</a><br />
+<a href="{% url 'hashtagtube:index' %}">Return to the homepage.</a><br />
 {% else %}
 <strong>Please Register</strong><br />
 <form id="user_form" method="post" action="{% url 'rango:register' %}" enctype="multipart/form-data">

@@ -1,9 +1,23 @@
 {% extends 'hashtagtube/base.html' %}
 {% load staticfiles %}
 
-{% block title_block %}
-    Your Profile
-{% endblock %}
+
 
 {% block body_block %}
 <h1>Your Profile</h1>
+	<div class="profile-info">
+		<! -- user image here -->
+		<! -- username here -->
+	</div>
+	
+	<div class="sidebar-info">
+		{% block sidebar_block %}
+			<! -- followers -->
+			<! -- following -->
+			<! -- posts -->
+		{% endblock %}
+	</div>
+	
+	<div class="videos">
+		<h1> Your Posts </h1>
+		<! -- uploaded videos -->
