@@ -4,10 +4,10 @@ from django.template.defaultfilters import slugify
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    
+
     picture = models.ImageField(upload_to='profile_images', blank=True)
     follows = models.ManyToManyField('self', related_name='follower', symmetrical=False)
-    video = models.FileField(upload_to='videos')
+    #video = models.FileField(upload_to='videos')
 
     def __str__(self):
         return self.user.username
@@ -17,28 +17,29 @@ class Category(models.Model):
     #on_delete set to do nothing-we want a category to exist
     #even when user deletes the account-need to take care
     #of integrity error when user delets account
-    creator = models.ForeignKey(UserProfile, on_delete=models.DO_NOTHING)
+    #not sure if creator foreign key needed-just add a category and let it be there
+   # creator = models.ForeignKey(UserProfile, on_delete=models.DO_NOTHING, null=True, blank=True)
     #video = models.FileField(upload_to='videos/')
-    
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
-        super(Category, self).save(*args, **kwargs)
+
+   # def save(self, *args, **kwargs):
+   #     self.slug = slugify(self.title)
+   #     super(Category, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = "Categories"
-        
+
     def __str__(self):
         return self.title
 
 class Page(models.Model):
-    title = models.CharField(max_length=30, unique=True)
-    author = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    title = models.CharField(max_length=50, unique=True)
+    author = models.ForeignKey(UserProfile, on_delete=models.CASCADE, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     video = models.FileField(upload_to='videos')
     thumbnail = models.ImageField(upload_to='thumbnails', blank=False)
     date = models.DateField(auto_now=False, auto_now_add=True)
     views = models.IntegerField(default=0)
-    
+
     like_react = models.IntegerField(default=0)
     dislike_react = models.IntegerField(default=0)
     haha_react = models.IntegerField(default=0)
