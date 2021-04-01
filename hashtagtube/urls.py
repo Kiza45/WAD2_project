@@ -14,4 +14,9 @@ urlpatterns = [
     	  views.add_video, name='add_video'),
     path('restricted/',views.restricted, name='restricted'),
     path('logout/',views.user_logout, name='logout'),
+    path('like_video/', views.like, name='like_video'),
+    path('dislike_video/', views.dislike, name='dislike_video'),
+    path('love_video/', views.love, name='love_video'),
+    path('haha_video/', views.haha, name='haha_video'),
+    path('follow_unfollow/', views.follow_unfollow, name='follow_unfollow'),
 ]

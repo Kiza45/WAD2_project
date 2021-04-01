@@ -4,26 +4,24 @@ from django.template.defaultfilters import slugify
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-
     picture = models.ImageField(upload_to='profile_images', blank=True)
     follows = models.ManyToManyField('self', related_name='follower', symmetrical=False)
-    #video = models.FileField(upload_to='videos')
+
+    def count_followers(self):
+        return self.follows.count()
+
+    def count_following(self):
+        return UserProfile.object.filter(follows=self).count()
 
     def __str__(self):
         return self.user.username
 
 class Category(models.Model):
     title = models.CharField(max_length=25, unique=True)
-    #on_delete set to do nothing-we want a category to exist
-    #even when user deletes the account-need to take care
-    #of integrity error when user delets account
-    #not sure if creator foreign key needed-just add a category and let it be there
-   # creator = models.ForeignKey(UserProfile, on_delete=models.DO_NOTHING, null=True, blank=True)
-    #video = models.FileField(upload_to='videos/')
 
-   # def save(self, *args, **kwargs):
-   #     self.slug = slugify(self.title)
-   #     super(Category, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super(Category, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = "Categories"

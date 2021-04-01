@@ -5,13 +5,13 @@ from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from hashtagtube.models import Category
-from hashtagtube.models import Page
+from hashtagtube.models import Page, UserProfile
 from hashtagtube.forms import CategoryForm, PageForm
 from hashtagtube.forms import UserForm, UserProfileForm
 
 def index(request):
     # Order the pages by the number of views in descending order.
-    # Retrieve the top 4 only 
+    # Retrieve the top 4 only
     category_list = Category.objects.order_by('-title')[:5]
     page_list = Page.objects.order_by('-views')[:4]
 
@@ -78,7 +78,7 @@ def add_video(request, category_name_slug):
 					                            category_name_slug}))
 		else:
 			print(form.errors)
-	
+
 	context_dict = {'form': form, 'category': category}
 	return render(request, 'hashtagtube/add_video.html', context=context_dict)
 
@@ -93,8 +93,8 @@ def user_login(request):
     if request.method == 'POST':
     	username = request.POST.get('username')
     	password = request.POST.get('password')
-        
-        # Use Django's machinery to attempt to see if the username/password 
+
+        # Use Django's machinery to attempt to see if the username/password
         # combination is valid - a User object is returned if it is
     	user = authenticate(username=username, password=password)
 
@@ -124,9 +124,9 @@ def user_logout(request):
 	return redirect(reverse('hashtagtube:index'))
 
 def register(request):
-	# A boolean value for telling the template 
+	# A boolean value for telling the template
 	# whether the registration was successful.
-	# Set to False initially. 
+	# Set to False initially.
 	# Code changes value to True when registration succeeds.
 	registered = False
 
@@ -155,7 +155,7 @@ def register(request):
 			profile.user = user
 
 			# Did the user provdie a profile picture?
-			# If so, we need to get it from the input form and 
+			# If so, we need to get it from the input form and
 			# put it in the UserProfile model.
 			if 'picture' in request.FILES:
 				profile.picture = request.FILES['picture']
@@ -178,20 +178,91 @@ def register(request):
 		                       'profile_form': profile_form,
 		                       'registered': registered})
 
+@login_required
+def like(request):
+    video_id = request.GET['page_id']
 
+    try:
+        page = Page.objects.get(id=int(page_id))
+    except Page.DoesNotExist:
+        return HttpResponse(-1)
+    except ValueError:
+        return Httpresponse(-1)
 
+    page.like_react = page.like_react + 1
+    page.save()
 
+    return HttpResponse(page.like_react)
 
+@login_required
+def dislike(request):
+    video_id = request.GET['page_id']
 
+    try:
+        page = Page.objects.get(id=int(page_id))
+    except Page.DoesNotExist:
+        return HttpResponse(-1)
+    except ValueError:
+        return Httpresponse(-1)
 
+    page.dislike_react = page.dislike_react + 1
+    page.save()
 
+    return HttpResponse(page.dislike_react)
 
+@login_required
+def love(request):
+    video_id = request.GET['page_id']
 
+    try:
+        page = Page.objects.get(id=int(page_id))
+    except Page.DoesNotExist:
+        return HttpResponse(-1)
+    except ValueError:
+        return Httpresponse(-1)
 
+    page.love_react = page.love_react + 1
+    page.save()
 
+    return HttpResponse(page.love_react)
 
+@login_required
+def haha(request):
+    video_id = request.GET['page_id']
 
+    try:
+        page = Page.objects.get(id=int(page_id))
+    except Page.DoesNotExist:
+        return HttpResponse(-1)
+    except ValueError:
+        return Httpresponse(-1)
 
+    page.haha_react = page.haha_react + 1
+    page.save()
 
+    return HttpResponse(page.haha_react)
 
+#correct when templates done
+@login_required
+def follow_unfollow(request):
+    try:
+        user_id = request.GET['user_id']
+        user_page_id = request.GET['user_profile_id']
+        user = UserProfile.objects.get(id=int(user_id))
+        user_page = UserProfile.objects.get(id=int(user_page_id))
+    except User.DoesNotExist:
+        return HttpResponse(-1)
+    except UserProfile.DoesNotExist:
+        return HttpResponse(-1)
+    except ValueError:
+        return HttpResponse(-1);
 
+    if 'follow' in request.GET:
+        user.follow.add(user_page)
+    elif 'unfollow' in request.GET:
+        user.follow.remove(user_page)
+
+    user.save()
+    user_page.save()
+
+    return HttpResponse(user_page.count_followers())
