@@ -15,8 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.urls import include
+
+from hashtagtube import views
 
 urlpatterns = [
+    path('', views.index, name='index'),
+    path('hashtagtube/', include('hashtagtube.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('registration.backends.simple.urls')),
 ]

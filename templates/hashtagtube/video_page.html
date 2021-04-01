@@ -1,0 +1,15 @@
+{% extends 'hashtagtube/base.html' %}
+{% load staticfiles %}
+
+
+<div class="video player">
+	<video width="600">
+		<videoLink src="{% media videos.video.url %}" type="video/mp4">
+	</video>
+</div>
+
+<div class="video info">
+	<a href="{% url 'watch_video' video.id %}">
+		<h2 class="video title">
+	</a>
+</div>
