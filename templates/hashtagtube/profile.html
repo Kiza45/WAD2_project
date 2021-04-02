@@ -6,15 +6,19 @@
 {% block body_block %}
 <h1>Your Profile</h1>
 	<div class="profile-info">
-		<! -- user image here -->
-		<! -- username here -->
+		<img src="{% static UserProfile.picture.url %}" style="width: 150px;height: 200px;"> 
+		<h2>{{UserProfile.user}}</h2>
+		{%if UserProfile != user_login.username}
+		{
+		
 	</div>
 	
 	<div class="sidebar-info">
 		{% block sidebar_block %}
-			<! -- followers -->
-			<! -- following -->
-			<! -- posts -->
+			<h3>followers</h3>
+			{{UserProfile.count_followers}}
+			<h3>following</h3>
+			{{UserProfile.count_following}}
 		{% endblock %}
 	</div>
 	
