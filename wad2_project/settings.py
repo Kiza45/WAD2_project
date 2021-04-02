@@ -147,4 +147,4 @@ LOGIN_REDIRECT_URL = 'hashtagtube:index'
 
 # The page users are directed to if they are not logged in.
 # This was set in a previous chapter. The registration package uses this, too.
-LOGIN_URL = 'hashtagtube:login'
+LOGIN_URL = 'auth_login'
