@@ -1,6 +1,24 @@
 {% extends 'hashtagtube/base.html' %}
 {% load staticfiles %}
 
-{% block title_block %}
-	<h1> Homepage </h1>
+{% block body_block %}
+	<h1 style="padding-left:250px;"> Home </h1>
+	<div class="container">
+      <div class="row my-4">
+
+        {% for video in all_videos %}
+        <div class="col-3">
+
+          <a href="{% url 'video_page' video.id %}" style="text-decoration: none;">
+            <img src="{% static video.thumbnail.url %}" class="w-100">
+          </a>
+          <a href="{% url 'video_page' video.id %}" style="text-decoration: none;">
+            <h6>{{Page.title}}</h6>  
+          </a>
+          <span class="text-muted">{{Page.views.all.count}} views
+
+        </div>
+        {% endfor %}
+		</div>
+	</div>
 {% endblock %}

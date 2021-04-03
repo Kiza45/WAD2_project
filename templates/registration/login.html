@@ -5,9 +5,9 @@
 {% endblock %}
 
 {% block body_block %}
-<h1>Login</h1>
+<h1 style="padding-left:170px">Login</h1>
 
-<form method="post" action=".">
+<form method="post" action="." style="padding-left:170px">
 	{% csrf_token %}
 
 	{{ form.as_p }}
@@ -16,8 +16,8 @@
 	<input type="hidden" name="next" value="{{ next }}" />
 </form>
 
-<p>
+<p style="padding-left:170px">
 	Not registered?
-	<a href="{% url 'registration_register' %}">Register here!</a>
+	<a href="{% url 'registration_register' %}" >Register here!</a>
 </p>
 {% endblock %}

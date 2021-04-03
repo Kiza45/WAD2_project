@@ -5,9 +5,9 @@
 {% endblock %}
 
 {% block body_block %}
-<h1>Register Here</h1>
+<h1 style="padding-left:170px">Register Here</h1>
 
-<form method="post" action=".">
+<form method="post" action="." style="padding-left:170px">
 	{% csrf_token %}
 
 	{{ form.as_p }}

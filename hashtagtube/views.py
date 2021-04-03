@@ -24,7 +24,20 @@ def index(request):
     response = render(request, 'hashtagtube/index.html', context=context_dict)
 
     return response
+def profile(request):
+    
+    category_list = Category.objects.order_by('-title')[:5]
+    page_list = Page.objects.order_by('-views')[:4]
 
+    context_dict = {}
+    context_dict['categories'] = category_list
+    context_dict['pages'] = page_list
+    
+
+
+
+    response = render(request, 'hashtagtube/profile.html', context=context_dict)
+    
 def show_category(request, category_name_slug):
 	context_dict = {}
 
