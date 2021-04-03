@@ -128,6 +128,7 @@ def add_page(cat, title, video, thumbnail, user, views=0, like=0, dislike=0, hah
     f = open(path_name, 'rb')
     django_file = File(f)
     p.video.save(video, django_file, save=True)
+    f.close()
 
 #retrieve the thumbnail file from the directory it's stored in
 #convert it to the django file and save as attribute-commented out just now
@@ -137,6 +138,7 @@ def add_page(cat, title, video, thumbnail, user, views=0, like=0, dislike=0, hah
 #    f = open(path_name, 'rb')
 #    django_file = File(f)
 #    p.thumbnail.save(thumbnail, django_file, save=True)
+#    f.close()
 
     p.save()
     return p
