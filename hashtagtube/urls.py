@@ -20,4 +20,5 @@ urlpatterns = [
     path('haha_video/', views.haha, name='haha_video'),
     path('follow_unfollow/', views.follow_unfollow, name='follow_unfollow'),
     path('profile/', views.profile, name='profile'),
+    path('video/', views.video, name='video'),    
 ]
