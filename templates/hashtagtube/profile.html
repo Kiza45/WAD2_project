@@ -4,13 +4,17 @@
 
 
 {% block body_block %}
-<h1>Your Profile</h1>
-	<div class="profile-info">
+<h1 style="padding-left:250px;">Your Profile</h1>
+	<div class="profile-info" style="padding-left:250px;">
 		<img src="{% static UserProfile.picture.url %}" style="width: 150px;height: 200px;"> 
 		<h2>{{UserProfile.user}}</h2>
-		{%if UserProfile != user_login.username}
-		{
-		
+		{%if UserProfile.user != request.seesion.user %}
+		{% if followed %}
+			<a href="{% url 'follow' user_obj.name %}" style="border: 1px solid; background: white; padding:10px; color: #15dae0;">Unfollow</a>
+		{% else %}
+			<a href="{% url 'follow' user_obj.name %}" style="border: 1px solid; background: yellow; padding:10px; color: black;">Follow</a>
+		{% endif %}
+		{% endif %}
 	</div>
 	
 	<div class="sidebar-info">
@@ -23,6 +27,6 @@
 	</div>
 	
 	<div class="videos">
-		<h1> Your Posts </h1>
+		<h1 style="padding-left:250px;"> Your Posts </h1>
 		<! -- uploaded videos -->
 {% endblock%}

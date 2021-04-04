@@ -26,9 +26,15 @@ def index(request):
     return response
 
 def profile(request):
-    
+
+    followed = False
     category_list = Category.objects.order_by('-title')[:5]
     page_list = Page.objects.order_by('-views')[:4]
+
+    try:
+        session_user = UserProfile.user
+    except ObjectDoesNotExist:
+        return render(request, '404.html')
 
     context_dict = {}
     context_dict['categories'] = category_list
@@ -39,6 +45,24 @@ def profile(request):
 
     response = render(request, 'hashtagtube/profile.html', context=context_dict)
     return response
+
+
+def video(request, video_id):
+    try:
+        video_file = Page.objects.get(id=video_id)
+    except ObjectDoesNotExist:
+        return render(request, 'notFound.html')
+
+    #session_user = User.objects.get(username=request.user.username)
+    #video_comments = Comment.objects.filter(post=video_file).order_by('-id')
+    page.views = page.views+1
+
+    Liked = False
+    if session_user in video_file.likes.all():
+        Liked = True
+
+    return render(request, video_page.html)
+
 
 def show_category(request, category_name_slug):
     context_dict = {}
@@ -133,13 +157,13 @@ def user_login(request):
             return HttpResponse("Invalid lgoin details supplied.")
     # The request is not a HTTP POST, so display the login form
     else:
-        return render(request, 'hashtagtube/login.html')
+        return render(request, 'registration/login.html')
 
 @login_required
 def user_logout(request):
     logout(request)
 
-    return redirect(reverse('hashtagtube:index'))
+    return render(request, ('registration/logout.html'))
 
 def register(request):
     # A boolean value for telling the template
