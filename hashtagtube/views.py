@@ -24,6 +24,7 @@ def index(request):
     response = render(request, 'hashtagtube/index.html', context=context_dict)
 
     return response
+
 def profile(request):
     
     category_list = Category.objects.order_by('-title')[:5]
@@ -37,92 +38,96 @@ def profile(request):
 
 
     response = render(request, 'hashtagtube/profile.html', context=context_dict)
-    
-def show_category(request, category_name_slug):
-	context_dict = {}
+    return response
 
-	try:
-		category = Category.objects.get(slug=category_name_slug)
-		pages = Page.objects.filter(category=category)
-		context_dict['pages'] = pages
-		context_dict['category'] = category
-	except Category.DoesNotExist:
-		context_dict['category'] = None
-		context_dict['pages'] = None
-	return render(request, 'hashtagtube/category.html', context=context_dict)
+def show_category(request, category_name_slug):
+    context_dict = {}
+
+    try:
+        category = Category.objects.get(slug=category_name_slug)
+        pages = Page.objects.filter(category=category)
+        context_dict['pages'] = pages
+        context_dict['category'] = category
+    except Category.DoesNotExist:
+        context_dict['category'] = None
+        context_dict['pages'] = None
+    return render(request, 'hashtagtube/category.html', context=context_dict)
 
 @login_required
 def add_category(request):
+    form = CategoryForm()
 
-	if request.method == 'POST':
-		form = CategoryForm(request.POST)
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
 
-		if form.is_valid():
-			form.save(commit=True)
-			return redirect('/hashtagtube/')
-		else:
-			print(form.errors)
+        if form.is_valid():
+            form.save(commit=True)
+            return redirect('/hashtagtube/')
+        else:
+            print(form.errors)
+
+    return render(request, 'hashtagtube/add_category.html', {'form': form})
 
 @login_required
 def add_video(request, category_name_slug):
-	try:
-		category = Category.objects.get(slug=category_name_slug)
-	except Category.DoesNotExist:
-		category = None
+    try:
+        category = Category.objects.get(slug=category_name_slug)
+    except Category.DoesNotExist:
+        category = None
 
-	if category is None:
-		return redirect('/hashtagtube/')
+    if category is None:
+        return redirect('/hashtagtube/')
 
-	form = PageForm()
+    form = PageForm()
 
-	if request.method == 'POST':
-		form = PageForm(request.POST, request.FILES)
+    if request.method == 'POST':
+        form = PageForm(request.POST, request.FILES)
 
-		if form.is_valid():
-			if category:
-				page = form.save(commit=False)
-				page.category = category
-				page.author = author
-				page.views = 0
-				page.save()
+        if form.is_valid():
+            if category:
+                page = form.save(commit=False)
+                page.category = category
+                page.author = author
+                page.views = 0
+                page.save()
 
-				return redirect(reverse('hashtagtube:show_category',
-					                    kwargs={'category_name_slug':
-					                            category_name_slug}))
-		else:
-			print(form.errors)
+                return redirect(reverse('hashtagtube:show_category',
+                                        kwargs={'category_name_slug':
+                                                category_name_slug}))
+        else:
+            print(form.errors)
 
-	context_dict = {'form': form, 'category': category}
-	return render(request, 'hashtagtube/add_video.html', context=context_dict)
+    context_dict = {'form': form, 'category': category}
+    return render(request, 'hashtagtube/add_video.html', context=context_dict)
 
 @login_required
 def restricted(request):
-	context_dict={'boldmessage':"Since you're logged in, you can see this text!"}
-	return render(request, 'hashtagtube/restricted.html', context=context_dict)
+    context_dict={'boldmessage':"Since you're logged in, you can see this text!"}
+    return render(request, 'hashtagtube/restricted.html', context=context_dict)
 
 
 def user_login(request):
     #If the request is a HTTP POST, try to pull out the relevant information.
     if request.method == 'POST':
-    	username = request.POST.get('username')
-    	password = request.POST.get('password')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
 
         # Use Django's machinery to attempt to see if the username/password
         # combination is valid - a User object is returned if it is
-    	user = authenticate(username=username, password=password)
+        user = authenticate(username=username, password=password)
 
-    	# If we have a User object, the details are correct.
-    	if user:
-    		# Is the account is active? It could have been disabled
-    		if user.is_active:
-    			# If the account is valid and active, we can log the user in.
-    			# We'll send the user back to the homepage.
-    			lgoin(request, user)
-    			return redirect(reverse('hashtagtube:index'))
-    		else:
-    			# An inactive account was used - no logging in!
-    			return HttpResponse("Your hashtagtube account is disabled.")
-    	else:
+        # If we have a User object, the details are correct.
+        if user:
+            # Is the account is active? It could have been disabled
+            if user.is_active:
+                # If the account is valid and active, we can log the user in.
+                # We'll send the user back to the homepage.
+                lgoin(request, user)
+                return redirect(reverse('hashtagtube:index'))
+            else:
+                # An inactive account was used - no logging in!
+                return HttpResponse("Your hashtagtube account is disabled.")
+        else:
             # Bad login details was provided, so we can't log the user in.
             print("Invalid login details: {username}, {password}")
             return HttpResponse("Invalid lgoin details supplied.")
@@ -132,64 +137,64 @@ def user_login(request):
 
 @login_required
 def user_logout(request):
-	logout(request)
+    logout(request)
 
-	return redirect(reverse('hashtagtube:index'))
+    return redirect(reverse('hashtagtube:index'))
 
 def register(request):
-	# A boolean value for telling the template
-	# whether the registration was successful.
-	# Set to False initially.
-	# Code changes value to True when registration succeeds.
-	registered = False
+    # A boolean value for telling the template
+    # whether the registration was successful.
+    # Set to False initially.
+    # Code changes value to True when registration succeeds.
+    registered = False
 
-	# If it's a HTTP POST
-	if request.method == 'POST':
-		# Attempt to grab information from the raw form information.
-		# Note that we make use of both UserForm and UserProfileForm.
-		user_form = UserForm(request.POST)
-		profile_form = UserProfileForm(request.POST)
+    # If it's a HTTP POST
+    if request.method == 'POST':
+        # Attempt to grab information from the raw form information.
+        # Note that we make use of both UserForm and UserProfileForm.
+        user_form = UserForm(request.POST)
+        profile_form = UserProfileForm(request.POST)
 
-		# If the two forms are valid...
-		if user_form.is_valid() and profile_form.is_valid():
-			#Save the user's form date to the database.
-			user = user_form.save()
+        # If the two forms are valid...
+        if user_form.is_valid() and profile_form.is_valid():
+            #Save the user's form date to the database.
+            user = user_form.save()
 
-			# Now we hash the password with the set_password method.
-			# Once hashed, we can update the user object.
-			user.set_password(user.password)
-			user.save()
+            # Now we hash the password with the set_password method.
+            # Once hashed, we can update the user object.
+            user.set_password(user.password)
+            user.save()
 
-			# Now sort out the UserProfile instance.
-			# Since we need to set the user attribute ourselves.
-			# we set commit=False. This delays saving the model
-			# until we're ready to avoid integrity problems.
-			profile = profile_form.save(commit=False)
-			profile.user = user
+            # Now sort out the UserProfile instance.
+            # Since we need to set the user attribute ourselves.
+            # we set commit=False. This delays saving the model
+            # until we're ready to avoid integrity problems.
+            profile = profile_form.save(commit=False)
+            profile.user = user
 
-			# Did the user provdie a profile picture?
-			# If so, we need to get it from the input form and
-			# put it in the UserProfile model.
-			if 'picture' in request.FILES:
-				profile.picture = request.FILES['picture']
+            # Did the user provdie a profile picture?
+            # If so, we need to get it from the input form and
+            # put it in the UserProfile model.
+            if 'picture' in request.FILES:
+                profile.picture = request.FILES['picture']
 
-			profile.save()
+            profile.save()
 
-			registered = True
-		else:
-			# Invalid form or forms
-			# Print problems to the terminal
-			print(user_form.errors, profile_form.errors)
-	else:
-		# Not a HTTP POST, so we render our form using two ModelForm instances.
-		# These forms will be blank, ready for user input.
-		user_form = UserForm()
-		profile_form = UserProfileForm()
-	#render the template depending on the context.
-	return render(request, 'hashtagtube.register.html',
-		           context = {'user_form': user_form,
-		                       'profile_form': profile_form,
-		                       'registered': registered})
+            registered = True
+        else:
+            # Invalid form or forms
+            # Print problems to the terminal
+            print(user_form.errors, profile_form.errors)
+    else:
+        # Not a HTTP POST, so we render our form using two ModelForm instances.
+        # These forms will be blank, ready for user input.
+        user_form = UserForm()
+        profile_form = UserProfileForm()
+    #render the template depending on the context.
+    return render(request, 'hashtagtube.register.html',
+                   context = {'user_form': user_form,
+                               'profile_form': profile_form,
+                               'registered': registered})
 
 @login_required
 def like(request):
