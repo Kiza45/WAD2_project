@@ -12,8 +12,8 @@ from hashtagtube.forms import UserForm, UserProfileForm
 def index(request):
     # Order the pages by the number of views in descending order.
     # Retrieve the top 4 only
-    category_list = Category.objects.order_by('-title')[:5]
-    page_list = Page.objects.order_by('-views')[:4]
+    category_list = Category.objects.all().order_by('-title')[:5]
+    page_list = Page.objects.all().order_by('-views')[:4]
 
     context_dict = {}
     context_dict['categories'] = category_list
@@ -86,7 +86,9 @@ def add_category(request):
 
         if form.is_valid():
             form.save(commit=True)
-            return redirect('/hashtagtube/')
+            return redirect(reverse('rango:show_category',
+                            kwargs={'category_name_slug':
+                                    category_name_slug}))
         else:
             print(form.errors)
 
