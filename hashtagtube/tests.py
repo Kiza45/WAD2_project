@@ -14,6 +14,15 @@ class CategoryMethodTests(TestCase):
 
 		self.assertEqual(category.slug, 'random-category-string')
 
+class PageMethodTests(TestCase):
+	def test_ensure_views_are_positive(self):
+		user = add_user('author1', 'author1@gmail.com', 'authorpassword')
+		author = add_user_profile(user, 'profile_pic.jpg')
+		category = add_category('Music')
+		page = add_page('title', author, category, 'video.mp4', 'thumbnail.jpg', -1) 
+
+		self.assertEqual((page.views >= 0), True)
+
 class IndexViewTests(TestCase):
 	def test_index_view_with_no_categories(self):
 		response = self.client.get(reverse('hashtagtube:index'))
@@ -87,10 +96,10 @@ def add_category(title):
 	category.save()
 	return category
 
-def add_page(title, author, category, video, thumbnail):
+def add_page(title, author, category, video, thumbnail, views=-1):
 	page = Page.objects.get_or_create(title=title, author=author, category=category, 
-	       video=video, thumbnail=thumbnail)[0]
-	
+	       video=video, thumbnail=thumbnail, views=views)[0]
+
 	return page
 
 def add_user_profile(user, picture):
@@ -100,6 +109,6 @@ def add_user_profile(user, picture):
 
 def add_user(username, email, password):
 	user = User.objects.create_user(username=username, email=email, password=password)
-	
+
 	user.save()
 	return user
