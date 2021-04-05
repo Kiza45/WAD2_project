@@ -38,7 +38,7 @@ class Category(models.Model):
 class Page(models.Model):
     title = models.CharField(max_length=50, unique=True)
     author = models.ForeignKey(
-    UserProfile, on_delete=models.CASCADE, null=True)
+        UserProfile, on_delete=models.CASCADE, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     video = models.FileField(upload_to='videos')
     thumbnail = models.ImageField(upload_to='thumbnails', blank=False)
@@ -56,6 +56,14 @@ class Page(models.Model):
     def save(self, *args, **kwargs):
         if self.views < 0:
             self.views = 0
+        if self.like_react < 0:
+            self.like_react = 0
+        if self.dislike_react < 0:
+            self.dislike_react = 0
+        if self.haha_react < 0:
+            self.haha_react = 0
+        if self.love_react < 0:
+            self.love_react = 0
 
         super(Page, self).save(*args, **kwargs)
 

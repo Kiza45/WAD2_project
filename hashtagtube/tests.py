@@ -3,6 +3,7 @@ from django.urls import reverse
 from hashtagtube.models import Category, Page, UserProfile
 from django.contrib.auth.models import User
 
+
 class CategoryMethodTests(TestCase):
 	def test_slug_line_creation(self):
 		"""
@@ -14,14 +15,48 @@ class CategoryMethodTests(TestCase):
 
 		self.assertEqual(category.slug, 'random-category-string')
 
+
 class PageMethodTests(TestCase):
 	def test_ensure_views_are_positive(self):
 		user = add_user('author1', 'author1@gmail.com', 'authorpassword')
 		author = add_user_profile(user, 'profile_pic.jpg')
 		category = add_category('Music')
-		page = add_page('title', author, category, 'video.mp4', 'thumbnail.jpg', -1) 
+		page = add_page('title', author, category, 'video.mp4', 'thumbnail.jpg', views=-1) 
 
 		self.assertEqual((page.views >= 0), True)
+
+	def test_ensure_like_react_is_postive(self):
+		user = add_user('author1', 'author1@gmail.com', 'authorpassword')
+		author = add_user_profile(user, 'profile_pic.jpg')
+		category = add_category('Sport')
+		page = add_page('title', author, category, 'video.mp4', 'thumbnail.jpg', like_react=-1)
+
+		self.assertEqual((page.like_react >= 0), True)
+
+	def test_ensure_dislike_react_is_positive(self):
+		user = add_user('author1', 'author1@gmail.com', 'authorpassword')
+		author = add_user_profile(user, 'profile_pic.jpg')
+		category = add_category('Music')
+		page = add_page('title', author, category, 'video.mp4', 'thumbnail.jpg', dislike_react=-1)
+
+		self.assertEqual((page.dislike_react >= 0), True)
+
+	def test_ensure_haha_react_is_positive(self):
+		user = add_user('author1', 'author1@gmail.com', 'authorpassword')
+		author = add_user_profile(user, 'profile_pic.jpg')
+		category = add_category('Music')
+		page = add_page('title', author, category, 'video.mp4', 'thumbnail.jpg', haha_react=-1)
+
+		self.assertEqual((page.haha_react >= 0), True)
+	
+	def test_ensure_love_react_is_positive(self):
+		user = add_user('author1', 'author@gmail.com', 'authorpassword')
+		author = add_user_profile(user, 'profile_pic.jpg')
+		category = add_category('Music')
+		page = add_page('title', author, category, 'video.mp4', 'thumbnail.jpg', love_react=-1)
+	
+		self.assertEqual((page.love_react >= 0), True)
+
 
 class IndexViewTests(TestCase):
 	def test_index_view_with_no_categories(self):
@@ -46,6 +81,7 @@ class IndexViewTests(TestCase):
 
 		num_categories = len(response.context['categories'])
 		self.assertEqual(num_categories, 3)
+
 
 class ProfileViewTests(TestCase):
 	def test_profile_view_with_no_categories(self):
@@ -90,15 +126,17 @@ class ProfileViewTests(TestCase):
 		num_pages = len(response.context['pages'])
 		self.assertEqual(num_pages, 3)
 
+
 def add_category(title):
 	category = Category.objects.get_or_create(title=title)[0]
 
 	category.save()
 	return category
 
-def add_page(title, author, category, video, thumbnail, views=-1):
+def add_page(title, author, category, video, thumbnail, views=0, like_react=0, dislike_react=0, haha_react=0, love_react=0):
 	page = Page.objects.get_or_create(title=title, author=author, category=category, 
-	       video=video, thumbnail=thumbnail, views=views)[0]
+	       video=video, thumbnail=thumbnail, views=views, like_react=like_react, dislike_react=dislike_react, haha_react=haha_react,
+	       love_react=love_react)[0]
 
 	return page
 
