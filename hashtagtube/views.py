@@ -8,6 +8,8 @@ from hashtagtube.models import Category, Comment
 from hashtagtube.models import Page, UserProfile
 from hashtagtube.forms import CategoryForm, PageForm
 from hashtagtube.forms import UserForm, UserProfileForm
+from django.core.exceptions import ObjectDoesNotExist
+
 
 def index(request):
     # Order the pages by the number of views in descending order.
@@ -19,11 +21,11 @@ def index(request):
     context_dict['categories'] = category_list
     context_dict['page_list'] = page_list
 
-
-    #Obtain our response object early so we can add cookie information.
+    # Obtain our response object early so we can add cookie information.
     response = render(request, 'hashtagtube/index.html', context=context_dict)
 
     return response
+
 
 def profile(request):
 
@@ -40,10 +42,8 @@ def profile(request):
     context_dict['categories'] = category_list
     context_dict['pages'] = page_list
 
-
-
-
-    response = render(request, 'hashtagtube/profile.html', context=context_dict)
+    response = render(request, 'hashtagtube/profile.html',
+                      context=context_dict)
     return response
 
 
@@ -51,14 +51,14 @@ def video(request, video_id):
     try:
         video_file = Page.objects.get(id=video_id)
     except ObjectDoesNotExist:
-        return render(request, 'notFound.html')
+    	return render(request, 'hashtagtube/notFound.html')
 
     #session_user = User.objects.get(username=request.user.username)
     #video_comments = Comment.objects.filter(post=video_file).order_by('-id')
     video_file.views = video_file.views+1
 
     Liked = False
-    #if session_user in video_file.likes.all():
+    # if session_user in video_file.likes.all():
     #    Liked = True
 
     return render(request, 'video_page.html')
@@ -77,6 +77,7 @@ def show_category(request, category_name_slug):
         context_dict['pages'] = None
     return render(request, 'hashtagtube/category.html', context=context_dict)
 
+
 @login_required
 def add_category(request):
     form = CategoryForm()
@@ -92,6 +93,7 @@ def add_category(request):
             print(form.errors)
 
     return render(request, 'hashtagtube/add_category.html', {'form': form})
+
 
 @login_required
 def add_video(request, category_name_slug):
@@ -125,14 +127,16 @@ def add_video(request, category_name_slug):
     context_dict = {'form': form, 'category': category}
     return render(request, 'hashtagtube/add_video.html', context=context_dict)
 
+
 @login_required
 def restricted(request):
-    context_dict={'boldmessage':"Since you're logged in, you can see this text!"}
+    context_dict = {
+        'boldmessage': "Since you're logged in, you can see this text!"}
     return render(request, 'hashtagtube/restricted.html', context=context_dict)
 
 
 def user_login(request):
-    #If the request is a HTTP POST, try to pull out the relevant information.
+    # If the request is a HTTP POST, try to pull out the relevant information.
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -160,11 +164,13 @@ def user_login(request):
     else:
         return render(request, 'registration/login.html')
 
+
 @login_required
 def user_logout(request):
     logout(request)
 
     return render(request, ('registration/logout.html'))
+
 
 def register(request):
     # A boolean value for telling the template
@@ -182,7 +188,7 @@ def register(request):
 
         # If the two forms are valid...
         if user_form.is_valid() and profile_form.is_valid():
-            #Save the user's form date to the database.
+            # Save the user's form date to the database.
             user = user_form.save()
 
             # Now we hash the password with the set_password method.
@@ -215,11 +221,12 @@ def register(request):
         # These forms will be blank, ready for user input.
         user_form = UserForm()
         profile_form = UserProfileForm()
-    #render the template depending on the context.
+    # render the template depending on the context.
     return render(request, 'hashtagtube.register.html',
-                   context = {'user_form': user_form,
-                               'profile_form': profile_form,
-                               'registered': registered})
+                  context={'user_form': user_form,
+                           'profile_form': profile_form,
+                           'registered': registered})
+
 
 @login_required
 def like(request):
@@ -237,6 +244,7 @@ def like(request):
 
     return HttpResponse(page.like_react)
 
+
 @login_required
 def dislike(request):
     video_id = request.GET['page_id']
@@ -252,6 +260,7 @@ def dislike(request):
     page.save()
 
     return HttpResponse(page.dislike_react)
+
 
 @login_required
 def love(request):
@@ -269,6 +278,7 @@ def love(request):
 
     return HttpResponse(page.love_react)
 
+
 @login_required
 def haha(request):
     video_id = request.GET['page_id']
@@ -285,7 +295,9 @@ def haha(request):
 
     return HttpResponse(page.haha_react)
 
-#correct when templates done
+# correct when templates done
+
+
 @login_required
 def follow_unfollow(request):
     try:
@@ -298,7 +310,7 @@ def follow_unfollow(request):
     except UserProfile.DoesNotExist:
         return HttpResponse(-1)
     except ValueError:
-        return HttpResponse(-1);
+        return HttpResponse(-1)
 
     if 'follow' in request.GET:
         user.follow.add(user_page)
@@ -310,13 +322,14 @@ def follow_unfollow(request):
 
     return HttpResponse(user_page.count_followers())
 
+
 @login_required
 def submit_comment(request):
-#get page id, user's id and comment contents
+    # get page id, user's id and comment contents
     video_id = request.GET['page_id']
     comment_content = request.GET['input']
     author_id = request.GET['user_id']
-#get the video page object, userprofile object
+# get the video page object, userprofile object
     try:
         video_page = Page.objects.get(id=int(page_id))
         author = UserProfile.objects.get(id=int(author_id))
@@ -325,8 +338,9 @@ def submit_comment(request):
     except ValueError:
         return Httpresponse(-1)
 
-#create appropriate comment object and return its contents
-    comment = Comment.objects.get_or_create(author=author, video_page=video_page)[0]
+# create appropriate comment object and return its contents
+    comment = Comment.objects.get_or_create(
+        author=author, video_page=video_page)[0]
     comment.comment = comment_content
     comment.save()
 
