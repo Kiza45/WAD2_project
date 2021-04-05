@@ -57,8 +57,8 @@
 							<li class="nav-item "><a class="nav-link" href="{% url 'hashtagtube:profile' %}">My Profile</a></li>
 							<li class="nav-item"><a class="nav-link" href="{% url 'hashtagtube:index' %}">Home</a></li>
 
-							<li class="nav-item"><a class="nav-link" href="{% url 'auth_logout' %}?next=/hashtagtube/">Logout</a></li>
-
+							<li class="nav-item"><a class="nav-link" href="{% url 'hashtagtube:logout' %}?next=/hashtagtube/">Logout</a></li>
+							
 
                         {% else %}
 							<li class="nav-item"><a class="nav-link" href="{% url 'registration_register' %}">Register Here</a></li>
@@ -69,7 +69,7 @@
             </nav>
         </header>
 
-        <div class="container-fluid">
+        <div class="container-fluid" style="padding-top:35px;">
             <div class="row">
                 <nav class="col-md-2 d-none d-md-block bg-secondary sidebar">
                     <div class="sidebar-sticky">
@@ -83,10 +83,7 @@
                     {% block side_block %}
 					{% endblock %}
 
-                    <footer>
-                        <p class="float-right"><a href="#">Back to top</a></p>
-
-                    </footer>
+                
                 </main>
             </div>
         </div>
