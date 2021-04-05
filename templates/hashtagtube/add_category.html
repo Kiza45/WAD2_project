@@ -6,7 +6,7 @@
 {% endblock %}
 
 {%block body_block %}
-<h1>Add a Category</h1>
+<h1 style="padding-left:180px;">Add a Category</h1>
 <div>
 	<form id="Category_form" method="post" action="{% url 'hashtagtube:add_category' %}">
 		{% csrf_token %}
