@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from hashtagtube.models import Category
+from hashtagtube.models import Category, Comment
 from hashtagtube.models import Page, UserProfile
 from hashtagtube.forms import CategoryForm, PageForm
 from hashtagtube.forms import UserForm, UserProfileForm

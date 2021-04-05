@@ -19,6 +19,7 @@ urlpatterns = [
     path('love_video/', views.love, name='love_video'),
     path('haha_video/', views.haha, name='haha_video'),
     path('follow_unfollow/', views.follow_unfollow, name='follow_unfollow'),
+    path('submit_comment/', views.submit_comment, name='submit_comment'),
     path('profile/', views.profile, name='profile'),
     path('video/<int:video_id>/', views.video, name='video'),    
 ]
