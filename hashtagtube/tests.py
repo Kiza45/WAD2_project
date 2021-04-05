@@ -64,8 +64,8 @@ class IndexViewTests(TestCase):
 
 		self.assertEqual(response.status_code, 200)
 		self.assertQuerysetEqual(response.context['categories'], [])
-		self.assertContains(response, 'There are no categories present.')	
-	
+		self.assertContains(response, 'There are no categories present.')
+
 	def test_index_view_with_categories(self):
 		"""
 		Checks whether categories are displayed correctly when present.
@@ -135,20 +135,28 @@ class AddCategoryViewTests(TestCase):
 
 
 class ShowCategoryViewTests(TestCase):
-	def test_show_category(self):
-		add_category('Food')
+	def test_show_category_view_when_category_exists(self):
+		category = add_category('Food')
 
 		response = self.client.get(reverse('hashtagtube:show_category', args=['food']))
 		self.assertEqual(response.status_code, 200)
 		self.assertContains(response, 'Food')
+		self.assertEqual(response.context['category'], category)
 
+	def test_show_category_view_when_category_does_not_exist(self):
+		response = self.client.get(reverse('hashtagtube:show_category', args=['food']))
+
+		self.assertEqual(response.status_code, 200)
+		self.assertEqual(response.context['pages'], None)
+		self.assertEqual(response.context['category'], None)
+	
 
 class VideoViewTests(TestCase):
 	def test_video_view_with_invalid_video_id(self):
-		response = self.client.get(reverse('hashtagtube:video', args=['1000']))
+		response = self.client.get(reverse('hashtagtube:video', args=['1000000']))
 
 		self.assertEqual(response.status_code, 200)
-		self.assertContains(response, 'Hello')
+		self.assertContains(response, 'Not Found')
 
 
 def add_category(title):
