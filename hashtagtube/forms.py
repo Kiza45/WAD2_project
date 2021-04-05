@@ -15,14 +15,14 @@ class PageForm(forms.ModelForm):
 	title = forms.CharField(max_length=30,
 		                    help_text="Please enter the title of the page.")
 	video = forms.FileField(help_text="Please upload the video of the page.")
-	thumbnail = forms.ImageField()
-	date = forms.DateField()
+	
+
 	views = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
 
 	class Meta:
 		model = Page
 
-		fields = ('title', 'video', 'thumbnail','views',)
+		fields = ('title', 'video','views',)
 
 
 class UserForm(forms.ModelForm):

@@ -4,7 +4,7 @@
         <ul>
         {% for category in categories %}
         <li>
-           <a href="/hashtagtube/category/{{category.title}}/">{{ category.title }}</a>
+           <a href="{% url 'hashtagtube:show_category' category.slug %}">{{ category.title }}</a>
         </li>
         {% endfor %}
         </ul>

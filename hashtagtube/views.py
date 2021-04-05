@@ -106,7 +106,7 @@ def add_video(request, category_name_slug):
     form = PageForm()
 
     if request.method == 'POST':
-        form = PageForm(request.POST, request.FILES)
+        form = PageForm(request.POST)
 
         if form.is_valid():
             if category:
