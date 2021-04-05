@@ -39,7 +39,7 @@ def profile(request):
     context_dict = {}
     context_dict['categories'] = category_list
     context_dict['pages'] = page_list
-    
+
 
 
 
@@ -55,11 +55,11 @@ def video(request, video_id):
 
     #session_user = User.objects.get(username=request.user.username)
     #video_comments = Comment.objects.filter(post=video_file).order_by('-id')
-    page.views = page.views+1
+    video_file.views = video_file.views+1
 
     Liked = False
-    if session_user in video_file.likes.all():
-        Liked = True
+    #if session_user in video_file.likes.all():
+    #    Liked = True
 
     return render(request, 'video_page.html')
 
@@ -309,3 +309,25 @@ def follow_unfollow(request):
     user_page.save()
 
     return HttpResponse(user_page.count_followers())
+
+@login_required
+def submit_comment(request):
+#get page id, user's id and comment contents
+    video_id = request.GET['page_id']
+    comment_content = request.GET['input']
+    author_id = request.GET['user_id']
+#get the video page object, userprofile object
+    try:
+        video_page = Page.objects.get(id=int(page_id))
+        author = UserProfile.objects.get(id=int(author_id))
+    except Page.DoesNotExist:
+        return HttpResponse(-1)
+    except ValueError:
+        return Httpresponse(-1)
+
+#create appropriate comment object and return its contents
+    comment = Comment.objects.get_or_create(author=author, video_page=video_page)[0]
+    comment.comment = comment_content
+    comment.save()
+
+    return HttpResponse(comment.__str__())
