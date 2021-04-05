@@ -12,12 +12,12 @@ from hashtagtube.forms import UserForm, UserProfileForm
 def index(request):
     # Order the pages by the number of views in descending order.
     # Retrieve the top 4 only
-    category_list = Category.objects.all().order_by('-title')[:5]
-    page_list = Page.objects.all().order_by('-views')[:4]
+    category_list = Category.objects.order_by('-title')[:5]
+    page_list = Page.objects.order_by('-views')[:4]
 
     context_dict = {}
     context_dict['categories'] = category_list
-    context_dict['pages'] = page_list
+    context_dict['page_list'] = page_list
 
 
     #Obtain our response object early so we can add cookie information.
@@ -61,7 +61,7 @@ def video(request, video_id):
     if session_user in video_file.likes.all():
         Liked = True
 
-    return render(request, video_page.html)
+    return render(request, 'video_page.html')
 
 
 def show_category(request, category_name_slug):
@@ -86,9 +86,8 @@ def add_category(request):
 
         if form.is_valid():
             form.save(commit=True)
-            return redirect(reverse('rango:show_category',
-                            kwargs={'category_name_slug':
-                                    category_name_slug}))
+            return redirect('/hashtagtube/')
+
         else:
             print(form.errors)
 

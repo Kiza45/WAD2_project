@@ -1,18 +1,14 @@
-<ul>
-{% if categories %}
-	{% for c in categories %}
-	
-		{% if c == current_category %}
-		<li>
-		<strong>
-			<a href="{% url 'hashtagtube:show_category' c.slug %}">{{ c.name }}</a>
-		</strong>
-		</li>
-		
-		{% endif %}
-	{% endfor %}
-
-{% else %}
-	<li><strong>There are no categories present.</strong></li>
-{% endif %}
-9 </ul>
+<head>Categories</head>
+    <div>
+    {% if categories %}
+        <ul>
+        {% for category in categories %}
+        <li>
+           <a href="/hashtagtube/category/{{category.title}}/">{{ category.title }}</a>
+        </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <strong>There are no categories present.</strong>
+    {% endif %}
+    </div>
