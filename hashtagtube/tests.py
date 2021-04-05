@@ -48,13 +48,13 @@ class PageMethodTests(TestCase):
 		page = add_page('title', author, category, 'video.mp4', 'thumbnail.jpg', haha_react=-1)
 
 		self.assertEqual((page.haha_react >= 0), True)
-	
+
 	def test_ensure_love_react_is_positive(self):
 		user = add_user('author1', 'author@gmail.com', 'authorpassword')
 		author = add_user_profile(user, 'profile_pic.jpg')
 		category = add_category('Music')
 		page = add_page('title', author, category, 'video.mp4', 'thumbnail.jpg', love_react=-1)
-	
+
 		self.assertEqual((page.love_react >= 0), True)
 
 
@@ -64,7 +64,7 @@ class IndexViewTests(TestCase):
 
 		self.assertEqual(response.status_code, 200)
 		self.assertQuerysetEqual(response.context['categories'], [])
-	
+
 	def test_index_view_with_categories(self):
 		"""
 		Checks whether categories are displayed correctly when present.
@@ -125,6 +125,21 @@ class ProfileViewTests(TestCase):
 
 		num_pages = len(response.context['pages'])
 		self.assertEqual(num_pages, 3)
+
+
+class AddCategoryViewTests(TestCase):
+	def test_add_category(self):
+		response = self.client.get(reverse('hashtagtube:add_category'))
+		self.assertEqual(response.status_code, 302)
+
+
+class ShowCategoryViewTests(TestCase):
+	def test_show_category(self):
+		add_category('Food')
+
+		response = self.client.get(reverse('hashtagtube:show_category', args=['food']))
+		self.assertEqual(response.status_code, 200)
+		self.assertContains(response, "Food")
 
 
 def add_category(title):
