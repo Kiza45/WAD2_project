@@ -8,7 +8,7 @@ from hashtagtube.models import Category, Comment
 from hashtagtube.models import Page, UserProfile
 from hashtagtube.forms import CategoryForm, PageForm
 from hashtagtube.forms import UserForm, UserProfileForm
-from django.core.exceptions import ObjectDoesNotExist
+from datetime import datetime
 
 
 def index(request):
@@ -21,7 +21,8 @@ def index(request):
     context_dict['categories'] = category_list
     context_dict['page_list'] = page_list
 
-    # Obtain our response object early so we can add cookie information.
+
+    #Obtain our response object early so we can add cookie information.
     response = render(request, 'hashtagtube/index.html', context=context_dict)
 
     return response
@@ -42,26 +43,30 @@ def profile(request):
     context_dict['categories'] = category_list
     context_dict['pages'] = page_list
 
-    response = render(request, 'hashtagtube/profile.html',
-                      context=context_dict)
+
+
+
+    response = render(request, 'hashtagtube/profile.html', context=context_dict)
     return response
+
+
 
 
 def video(request, video_id):
     try:
         video_file = Page.objects.get(id=video_id)
     except ObjectDoesNotExist:
-    	return render(request, 'hashtagtube/notFound.html')
+        return render(request, 'hashtagtube/notFound.html')
 
     #session_user = User.objects.get(username=request.user.username)
     #video_comments = Comment.objects.filter(post=video_file).order_by('-id')
     video_file.views = video_file.views+1
 
     Liked = False
-    # if session_user in video_file.likes.all():
+    #if session_user in video_file.likes.all():
     #    Liked = True
 
-    return render(request, 'video_page.html')
+    return render(request, 'hashtagtube/video_page.html')
 
 
 def show_category(request, category_name_slug):
@@ -95,6 +100,7 @@ def add_category(request):
     return render(request, 'hashtagtube/add_category.html', {'form': form})
 
 
+
 @login_required
 def add_video(request, category_name_slug):
     try:
@@ -108,19 +114,19 @@ def add_video(request, category_name_slug):
     form = PageForm()
 
     if request.method == 'POST':
-        form = PageForm(request.POST)
+        form = PageForm(request.POST, request.FILES)
 
         if form.is_valid():
             if category:
                 page = form.save(commit=False)
                 page.category = category
-                page.author = author
                 page.views = 0
+                page.like_react = 0
                 page.save()
 
                 return redirect(reverse('hashtagtube:show_category',
                                         kwargs={'category_name_slug':
-                                                category_name_slug}))
+                                            category_name_slug}))
         else:
             print(form.errors)
 
