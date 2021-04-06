@@ -2,25 +2,24 @@
 {% load staticfiles %}
 
 {% block title_block %}
-	Upload a video
-{% endblock %}
+    Upload a video
+{% endblock %} 
 
 {%block body_block %}
-<h1>Upload a video to {{ category.name }}</h1>
-<div>
-	<form id="PageForm" method="post" action="{% url
-	'hashtagtube:add_video' category.slug %}">
-		{% csrf_token %}
-		{% for hidden in form.hidden_fields %}
-			{{ hidden }}
-		{% endfor %}
-		{% for field in form.visible_fields %}
-			{{ field.errors }}
-			{{ field.help_text }}
-			{{ field }}
-		{% endfor %}
-		<input type="submit" name="submit" value="Upload Video" />
-	</form>
-</div>
-{% endblock %}
+    <h1 style="padding-left:250px;">Upload a video to {{ category.title }}</h1>
+    <div>
+         <form id="PageForm" method="post" action="{% url 'hashtagtube:add_video' category.slug %}" style="padding-left:250px;">
+            {% csrf_token %}
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+            {% for field in form.visible_fields %}
+                {{ field.errors }}
+                {{ field.help_text }}
+                {{ field }}
+            {% endfor %}
+            <input type="submit" name="submit" value="Upload Video" />
+        </form>
+    </div>
+    {% endblock %}
 

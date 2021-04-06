@@ -6,9 +6,9 @@
 {% endblock %}
 
 {%block body_block %}
-<h1 style="padding-left:250px;">Add a Category</h1>
+<h1 style="padding-left:180px;">Add a Category</h1>
 <div>
-	<form id="Category_form" method="post" action="{% url 'hashtagtube:add_category' %}" style="padding-left:250px;">
+	<form id="Category_form" method="post" action="{% url 'hashtagtube:add_category' %}">
 		{% csrf_token %}
 		{% for hidden in form.hidden_fields %}
 			{{ hidden }}

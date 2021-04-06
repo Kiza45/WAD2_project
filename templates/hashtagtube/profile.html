@@ -6,6 +6,7 @@
 {% block body_block %}
 <h1 style="padding-left:250px;">Your Profile</h1>
 	<div class="profile-info" style="padding-left:250px;">
+		
 		<h2>{{UserProfile.user}}</h2>
 		{%if UserProfile.user != request.seesion.user %}
 		{% if followed %}
