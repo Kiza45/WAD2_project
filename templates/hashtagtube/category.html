@@ -15,14 +15,14 @@
     {% if pages %}
     <ul>
         {% for page in pages %}
-        <li><a href="{{ page.video }}">{{ page.title }}</a></li>
+        <li><a href="{{ page.video }}" style="padding-left:250px;" class="text-dark">{{ page.title }} </a></li>
         {% endfor %}
     </ul>
     {% else %}
-        <strong>No video currently in category.</strong>
+        <h2 style="padding-left:250px;"><strong>No video currently in category.</strong></h2>
     {% endif %}
     {% if user.is_authenticated %}
-        <a href="{% url 'hashtagtube:add_video' category.slug %}">Upload Video</a><br />
+        <h3><a href="{% url 'hashtagtube:add_video' category.slug %}" style="padding-left:250px;" class="text-dark">Upload Video</a><br /></h3>
     {% else %}
     {% endif %}
     {% else %}
