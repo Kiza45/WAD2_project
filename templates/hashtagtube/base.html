@@ -57,7 +57,7 @@
 							<li class="nav-item "><a class="nav-link" href="{% url 'hashtagtube:profile' %}">My Profile</a></li>
 							<li class="nav-item"><a class="nav-link" href="{% url 'hashtagtube:index' %}">Home</a></li>
 
-							<li class="nav-item"><a class="nav-link" href="{% url 'hashtagtube:logout' %}?next=/hashtagtube/">Logout</a></li>
+							<li class="nav-item"><a class="nav-link" href="{% url 'auth_logout' %}?next={% url 'hashtagtube:index' %}">Logout</a></li>
 							
 
                         {% else %}
