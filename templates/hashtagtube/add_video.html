@@ -5,10 +5,15 @@
     Upload a video
 {% endblock %} 
 
+<<<<<<< HEAD
 {% block body_block %}
     <h1>Upload a video to {{ category.title }}</h1>
+=======
+{%block body_block %}
+    <h1 style="padding-left:250px;">Upload a video to {{ category.title }}</h1>
+>>>>>>> d5555fe5ef1c61fcbbaef8f2d054ac128fa67641
     <div>
-         <form id="PageForm" method="post" action="{% url 'hashtagtube:add_video' category.slug %}">
+         <form id="PageForm" method="post" action="{% url 'hashtagtube:add_video' category.slug %}" style="padding-left:250px;">
             {% csrf_token %}
             {% for hidden in form.hidden_fields %}
                 {{ hidden }}
