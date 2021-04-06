@@ -12,7 +12,7 @@
           <a href="{% url 'hashtagtube:video' video.id %}" style="text-decoration: none;">
             <img src="{% static thumbnails.url %}" class="w-100">
           </a>
-          <a href="{% url 'hashtagtube:video' video.id %}" style="text-decoration: none;">
+          <a href="{% url 'hashtagtube:video' video.id %}" style="text-decoration: none;" class="text-dark">
             <h6>{{video.title}}</h6>  
           </a>
           <span class="text-muted">{{video.views.all.count}} views
