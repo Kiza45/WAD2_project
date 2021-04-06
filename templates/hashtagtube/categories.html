@@ -1,10 +1,10 @@
-<head>Categories</head>
+<h3><head padding-top:35px;">Categories</head></h3>
     <div>
     {% if categories %}
         <ul>
         {% for category in categories %}
         <li>
-           <a href="{% url 'hashtagtube:show_category' category.slug %}">{{ category.title }}</a>
+          <h3><a href="{% url 'hashtagtube:show_category' category.slug %}" class="text-dark">{{ category.title }}</a></h3>
         </li>
         {% endfor %}
         </ul>
@@ -13,6 +13,6 @@
     {% endif %}
     <br>
     <strong>
-        <a href="/hashtagtube/add_category/">Add new category</a>
+        <h3><a href="/hashtagtube/add_category/" class="text-dark">Add new category</a></h3>
     </strong>
     </div>

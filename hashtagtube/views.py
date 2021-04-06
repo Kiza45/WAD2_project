@@ -10,7 +10,6 @@ from hashtagtube.forms import CategoryForm, PageForm
 from hashtagtube.forms import UserForm, UserProfileForm
 from datetime import datetime
 
-
 def index(request):
     # Order the pages by the number of views in descending order.
     # Retrieve the top 4 only
@@ -26,7 +25,6 @@ def index(request):
     response = render(request, 'hashtagtube/index.html', context=context_dict)
 
     return response
-
 
 def profile(request):
 
@@ -48,8 +46,6 @@ def profile(request):
 
     response = render(request, 'hashtagtube/profile.html', context=context_dict)
     return response
-
-
 
 
 def video(request, video_id):
@@ -82,7 +78,6 @@ def show_category(request, category_name_slug):
         context_dict['pages'] = None
     return render(request, 'hashtagtube/category.html', context=context_dict)
 
-
 @login_required
 def add_category(request):
     form = CategoryForm()
@@ -98,8 +93,6 @@ def add_category(request):
             print(form.errors)
 
     return render(request, 'hashtagtube/add_category.html', {'form': form})
-
-
 
 @login_required
 def add_video(request, category_name_slug):
@@ -133,11 +126,9 @@ def add_video(request, category_name_slug):
     context_dict = {'form': form, 'category': category}
     return render(request, 'hashtagtube/add_video.html', context=context_dict)
 
-
 @login_required
 def restricted(request):
-    context_dict = {
-        'boldmessage': "Since you're logged in, you can see this text!"}
+    context_dict={'boldmessage':"Since you're logged in, you can see this text!"}
     return render(request, 'hashtagtube/restricted.html', context=context_dict)
 
 
