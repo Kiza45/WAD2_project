@@ -8,7 +8,6 @@ from hashtagtube.models import Category, Comment
 from hashtagtube.models import Page, UserProfile
 from hashtagtube.forms import CategoryForm, PageForm
 from hashtagtube.forms import UserForm, UserProfileForm
-from datetime import datetime
 
 def index(request):
     # Order the pages by the number of views in descending order.
