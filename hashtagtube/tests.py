@@ -3,6 +3,7 @@ from django.urls import reverse
 from hashtagtube.models import Category, Page, UserProfile
 from django.contrib.auth.models import User
 from django.test import Client
+from hashtagtube.forms import CategoryForm
 
 class CategoryMethodTests(TestCase):
 	def test_slug_line_creation(self):
@@ -84,7 +85,7 @@ class IndexViewTests(TestCase):
 
 
 class ProfileViewTests(TestCase):
-	def test_profile_view_with_no_categories(self):
+	def test_profile_view_without_categories(self):
 		response = self.client.get(reverse('hashtagtube:profile'))
 
 		self.assertEqual(response.status_code, 200)
@@ -121,17 +122,7 @@ class ProfileViewTests(TestCase):
 
 		response = self.client.get(reverse('hashtagtube:profile'))
 		self.assertEqual(response.status_code, 200)
-		self.assertContains(response, "Page1")
-
-		num_pages = len(response.context['pages'])
-		self.assertEqual(num_pages, 3)
-
-
-<<<<<<< HEAD
-class AddCategoryViewTests(TestCase):
-	def test_add_category(self):
-		response = self.client.get(reverse('hashtagtube:add_category'))
-		self.assertEqual(response.status_code, 302)
+		self.assertQuerysetEqual(response.context['pages'], ['Page1'])
 
 
 class ShowCategoryViewTests(TestCase):
@@ -158,6 +149,7 @@ class VideoViewTests(TestCase):
 		self.assertEqual(response.status_code, 200)
 		self.assertTemplateUsed('hashtagtube/notFound.html')
 
+
 class RestrictedViewTests(TestCase):
 	def test_restricted_view(self):
 		user = User.objects.create(username='testuser')
@@ -171,8 +163,19 @@ class RestrictedViewTests(TestCase):
 		self.assertEqual(response.context['boldmessage'], "Since you're logged in, you can see this text!")
 
 
-=======
->>>>>>> d5555fe5ef1c61fcbbaef8f2d054ac128fa67641
+class AddCategoryViewTests(TestCase):
+	def test_add_category_view_by_adding_category(self):
+		user = User.objects.create(username='testuser')
+		user.set_password('12345')
+		user.save()
+
+		self.client.login(username='testuser', password='12345')
+		response = self.client.post(reverse('hashtagtube:add_category'), data={'title':'Example Category'})
+
+		self.assertEqual(response.status_code, 200)
+		self.assertContains(response, "Example Category")
+
+
 def add_category(title):
 	category = Category.objects.get_or_create(title=title)[0]
 
