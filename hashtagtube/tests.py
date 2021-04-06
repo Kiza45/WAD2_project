@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from hashtagtube.models import Category, Page, UserProfile
 from django.contrib.auth.models import User
-
+from django.test import Client
 
 class CategoryMethodTests(TestCase):
 	def test_slug_line_creation(self):
@@ -127,6 +127,52 @@ class ProfileViewTests(TestCase):
 		self.assertEqual(num_pages, 3)
 
 
+<<<<<<< HEAD
+class AddCategoryViewTests(TestCase):
+	def test_add_category(self):
+		response = self.client.get(reverse('hashtagtube:add_category'))
+		self.assertEqual(response.status_code, 302)
+
+
+class ShowCategoryViewTests(TestCase):
+	def test_show_category_view_when_category_exists(self):
+		category = add_category('Food')
+
+		response = self.client.get(reverse('hashtagtube:show_category', args=['food']))
+		self.assertEqual(response.status_code, 200)
+		self.assertContains(response, 'Food')
+		self.assertEqual(response.context['category'], category)
+
+	def test_show_category_view_when_category_does_not_exist(self):
+		response = self.client.get(reverse('hashtagtube:show_category', args=['food']))
+
+		self.assertEqual(response.status_code, 200)
+		self.assertEqual(response.context['pages'], None)
+		self.assertEqual(response.context['category'], None)
+
+
+class VideoViewTests(TestCase):
+	def test_video_view_with_invalid_video_id(self):
+		response = self.client.get(reverse('hashtagtube:video', args=['1000000']))
+
+		self.assertEqual(response.status_code, 200)
+		self.assertTemplateUsed('hashtagtube/notFound.html')
+
+class RestrictedViewTests(TestCase):
+	def test_restricted_view(self):
+		user = User.objects.create(username='testuser')
+		user.set_password('12345')
+		user.save()
+
+		self.client.login(username='testuser', password='12345')
+		response = self.client.get(reverse('hashtagtube:restricted'))
+
+		self.assertEqual(response.status_code, 200)
+		self.assertEqual(response.context['boldmessage'], "Since you're logged in, you can see this text!")
+
+
+=======
+>>>>>>> d5555fe5ef1c61fcbbaef8f2d054ac128fa67641
 def add_category(title):
 	category = Category.objects.get_or_create(title=title)[0]
 

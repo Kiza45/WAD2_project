@@ -8,6 +8,7 @@ from hashtagtube.models import Category, Comment
 from hashtagtube.models import Page, UserProfile
 from hashtagtube.forms import CategoryForm, PageForm
 from hashtagtube.forms import UserForm, UserProfileForm
+from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
 
 def index(request):
