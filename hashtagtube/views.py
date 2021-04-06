@@ -228,10 +228,13 @@ def restricted(request):
       #                     'registered': registered})
 
 
+#functions used for ajax asynchronous operations
 @login_required
 def like(request):
+    #obtain the id of the video page
     video_id = request.GET['page_id']
 
+    #obtain the page object if it exists, else raise an exception
     try:
         page = Page.objects.get(id=int(page_id))
     except Page.DoesNotExist:
@@ -239,6 +242,7 @@ def like(request):
     except ValueError:
         return Httpresponse(-1)
 
+    #update the like count on the page, save and return it
     page.like_react = page.like_react + 1
     page.save()
 
@@ -247,8 +251,10 @@ def like(request):
 
 @login_required
 def dislike(request):
+    #obtain the id of the video page
     video_id = request.GET['page_id']
 
+    #obtain the page object if it exists, else raise an exception
     try:
         page = Page.objects.get(id=int(page_id))
     except Page.DoesNotExist:
@@ -256,6 +262,7 @@ def dislike(request):
     except ValueError:
         return Httpresponse(-1)
 
+    #update the dislike count on the page, save and return it
     page.dislike_react = page.dislike_react + 1
     page.save()
 
@@ -264,8 +271,10 @@ def dislike(request):
 
 @login_required
 def love(request):
+    #obtain the id of the video page 
     video_id = request.GET['page_id']
 
+    #obtain the page object if it exists, else raise an exception
     try:
         page = Page.objects.get(id=int(page_id))
     except Page.DoesNotExist:
@@ -273,6 +282,7 @@ def love(request):
     except ValueError:
         return Httpresponse(-1)
 
+    #update the love count on the page, save and return it
     page.love_react = page.love_react + 1
     page.save()
 
@@ -281,8 +291,10 @@ def love(request):
 
 @login_required
 def haha(request):
+    #obtain the id of the video page
     video_id = request.GET['page_id']
 
+    #obtain the page object if it exists, else raise an exception
     try:
         page = Page.objects.get(id=int(page_id))
     except Page.DoesNotExist:
@@ -290,16 +302,19 @@ def haha(request):
     except ValueError:
         return Httpresponse(-1)
 
+    #update the haha count on the page, save and return it
     page.haha_react = page.haha_react + 1
     page.save()
 
     return HttpResponse(page.haha_react)
 
-# correct when templates done
 
 
 @login_required
 def follow_unfollow(request):
+    #obtain the user profile and user id's
+    #obtain the objects with those id's
+    #if those don't exist, raise exception
     try:
         user_id = request.GET['user_id']
         user_page_id = request.GET['user_profile_id']
@@ -312,11 +327,16 @@ def follow_unfollow(request):
     except ValueError:
         return HttpResponse(-1)
 
+    #if doesn't follow the user profile, add profile to user's following acc's
+    #if they do follow, unfollow/remove the profile from user's following acc's
+    #updates the follow relation between objects
     if 'follow' in request.GET:
         user.follow.add(user_page)
     elif 'unfollow' in request.GET:
         user.follow.remove(user_page)
 
+    #save both user profile objects and return the followers count for the
+    #profile that's being displayed
     user.save()
     user_page.save()
 
