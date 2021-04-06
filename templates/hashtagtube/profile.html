@@ -6,6 +6,7 @@
 {% block body_block %}
 <h1 style="padding-left:250px;">Your Profile</h1>
 	<div class="profile-info" style="padding-left:250px;">
+		<img src="{% static UserProfile.picture.url %}" style="width: 150px;height: 200px;"> 
 		<h2>{{UserProfile.user}}</h2>
 		{%if UserProfile.user != request.seesion.user %}
 		{% if followed %}

@@ -42,7 +42,7 @@ class Page(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     video = models.FileField(upload_to='video')
     thumbnail = models.ImageField(upload_to='thumbnails', blank=False)
-    date = models.DateTimeField(auto_now=False, auto_now_add=True)
+    date = models.DateField(auto_now=False, auto_now_add=True)
     views = models.IntegerField(default=0)
 
     like_react = models.IntegerField(default=0)
